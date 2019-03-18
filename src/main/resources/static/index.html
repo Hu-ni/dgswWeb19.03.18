@@ -3,14 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <section>
     <h1>Call with AJAX</h1>
     <div>
         <input id="name" placeholder="이름 입력">
-        <button>확인</button>
+        <button onclick="send2()">확인</button>
+        <div id="display-response">결과</div>
     </div>
+    <script>
+        async function send2(){
+            let name = $("#name").val().trim()
+            if(!name || name === ''){
+                $("#display-response").html("입력하세요");
+                return;
+            };
+            try{
+                let response = await $.get("/gree ting/" + name);
+                $("#display-response").html(JSON.stringify(response));
+            }catch{
+                $("#display-response").html(JSON.stringify(err));
+            }finally {
+                $("#display-response").html(
+                   $("#display-response").html() + "<br>이 부분은 항상 실행됨");
+            }
+            let response = await $.get("/gree ting/" + name);
+            $("#display-response").html(JSON.stringify(response));
+                // .done(function(response) {  //try
+                //     $("#display-response").html(JSON.stringify(response));
+                // })
+                // .fail(function(err){    //catch
+                //     $("#display-response").html(JSON.stringify(err));
+                // })
+                // .always(function(response) {    //finally
+                //     $("#display-response").html(
+                //         $("#display-response").html() + "<br>이 부분은 항상 실행됨");
+                // });
+        }
+        function send1(){
+            let name = $("#name").val().trim()
+            if(!name || name === ''){
+                $("#display-response").html("입력하세요");
+                return;
+            };
+            $.get("/gree ting/" + name)
+            //try
+                .done(response => $("#display-response").html(JSON.stringify(response))
+                )
+            //catch
+                .fail((err) => $("#display-response").html(JSON.stringify(err)))
+            //finaly
+                .always(response => $("#display-response").html(
+                        $("#display-response").html() + "<br>이 부분은 항상 실행됨"));
+        }
+
+        function send(){
+            let name = $("#name").val().trim()
+            if(!name || name === ''){
+                $("#display-response").html("입력하세요");
+                return;
+            };
+            $.ajax({
+                url: "./greeting/" + name,
+                type: "GET",
+                async: true,
+                success: function(response) {
+                    $("#display-response").html(JSON.stringify(response));
+                },
+                error: function(err){
+                    $("#display-response").html(JSON.stringify(err));
+                },
+
+            });
+        }
+    </script>
 </section>
 </body>
 </html>
